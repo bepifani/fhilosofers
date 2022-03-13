@@ -6,7 +6,7 @@
 /*   By: bepifani <bepifani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 15:29:45 by bepifani          #+#    #+#             */
-/*   Updated: 2022/03/12 17:35:49 by bepifani         ###   ########.fr       */
+/*   Updated: 2022/03/13 13:04:55 by bepifani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,18 @@
 # include <sys/wait.h>
 # include <semaphore.h>
 
+typedef struct s_philo2
+{
+	int				name;
+	int				left_fork;
+	int				right_fork;
+	int				nb_eat;
+	int				last_eat;
+	int				death;
+	pthread_mutex_t	eating;
+	struct s_philo	*phil;
+}	t_philo2;
+
 typedef struct s_pfilo
 {
 	int		nb_philo;
@@ -33,8 +45,19 @@ typedef struct s_pfilo
 	int		time_eat;
 	int		time_sleep;
 	int		nb_eat;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	write;
+	pthread_mutex_t	death_occur;
+	t_philo2	*philosof;
 }	t_philo;
 
-int	ft_atoi(const char *str);
+//utils.c
+int		ft_atoi(const char *str);
+
+//philo.c
+int		ft_parser(char **argv, t_philo *philo, int argc);
+void	ft_init_philo2(t_philo *philo);
+int		ft_init_mutex(t_philo *philo);
+void	ft_init(t_philo *philo);
 
 #endif
