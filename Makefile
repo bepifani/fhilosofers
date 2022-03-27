@@ -6,7 +6,7 @@
 #    By: bepifani <bepifani@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/12 15:29:23 by bepifani          #+#    #+#              #
-#    Updated: 2022/03/12 17:41:57 by bepifani         ###   ########.fr        #
+#    Updated: 2022/03/21 19:31:15 by bepifani         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = philo
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra -c
 
-SRC_FILES = philo.c	utils.c
+SRC_FILES = philo.c	utils.c	utils2.c philo2.c
 
 OBJECTS = $(SRC_FILES:.c=.o)
 
