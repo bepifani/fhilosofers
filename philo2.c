@@ -5,88 +5,109 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bepifani <bepifani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/21 19:29:46 by bepifani          #+#    #+#             */
-/*   Updated: 2022/03/27 18:12:01 by bepifani         ###   ########.fr       */
+/*   Created: 2022/03/29 22:58:44 by bepifani          #+#    #+#             */
+/*   Updated: 2022/03/29 23:15:49 by bepifani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*ft_philo(void *p)
+void	*ft_spec(void *p)
 {
-	t_philo2	*philo;
-	pthread_t	t;
+	t_philo2	*phil;
+	int			i;
+	int			en;
 
-	printf ("ft_philo\n");
-	philo = (t_philo2 *)p;
-	philo->last_eat = get_time();
-	philo->death = philo->last_eat + philo->phil->time_die;
-	pthread_create(&t, NULL, ft_ob, p);
-	pthread_detach(t);
-	if (philo->name % 2 == 1 || (philo->phil->time_die % 2 == 1 && philo->name == philo->phil->nb_philo))
-	{
-		ft_writing(philo, "THINK");
-		usleep(philo->phil->nb_philo * 500);
-	}
+	phil = (t_philo2 *)p;
 	while (1)
 	{
-		ft_eating(philo);
-		ft_writing (philo, "SLEEP");
-		usleep (philo->phil->nb_philo * 1000);
-		ft_writing (philo, "THINK");
+		i = 0;
+		en = 0;
+		while (i < phil->nb_philo)
+		{
+			if (phil->philosof[i++].eat_counter >= phil->must_eat)
+				en++;
+		}
+		if (en == phil->nb_philo)
+			break ;
+		usleep(2500);
 	}
+	pthread_mutex_unlock(&phil->death_occur);
+	return (NULL);
 }
 
-void *ft_ob(void *p)
+void	*ft_ob(void	*p)
 {
-	t_philo2	*philo;
+	t_philo	*phil;
 
-	printf ("ft_ob\n");
-	philo=(t_philo2 *)p;
+	phil = (t_philo *)p;
 	while (1)
 	{
-		pthread_mutex_lock(&philo->eating);
-		if (get_time() > philo->death)
+		pthread_mutex_lock(&phil->eating_m);
+		if (ft_get_time() > phil->death_lim)
 		{
-			ft_writing(philo, "DIED");
-			pthread_mutex_unlock(&philo->eating);
-			pthread_mutex_unlock(&philo->phil->death_occur);
+			ft_massage(phil, "DIED");
+			pthread_mutex_unlock(&phil->eating_m);
+			pthread_mutex_unlock(&phil->state->death_occur);
 		}
-		pthread_mutex_unlock(&philo->eating);
+		pthread_mutex_unlock(&phil->eating_m);
 		usleep(1000);
 	}
 }
 
-void	ft_eating(t_philo2 *p)
+void	*ft_philo(void *p)
 {
-	printf ("ft_eating\n");
-	pthread_mutex_lock(&p->phil->forks[p->right_fork]);
-	ft_writing(p, "TAKEN");
-	pthread_mutex_lock(&p->phil->forks[p->left_fork]);
-	ft_writing(p, "TAKEN");
-	pthread_mutex_lock(&p->eating);
-	p->last_eat = get_time();
-	p->death = p->last_eat + p->phil->time_die;
-	ft_writing(p, "EATING");
-	usleep(p->phil->nb_eat * 1000);
-	p->eat_counter++;
-	pthread_mutex_unlock(&p->eating);
-	pthread_mutex_unlock(&p->phil->forks[p->left_fork]);
-	pthread_mutex_unlock(&p->phil->forks[p->right_fork]);
+	t_philo		*self;
+	pthread_t	tid;
+
+	self = (t_philo *)p;
+	self->last_eat = ft_get_time();
+	self->death_lim = self->last_eat + self->state->time_die;
+	pthread_create(&tid, NULL, ft_ob, p);
+	pthread_detach(tid);
+	if (self->name % 2 == 1 || (self->state->nb_philo % 2 == 1
+			&& self->name == self->state->nb_philo - 1))
+	{
+		ft_massage(self, "THINKING");
+		usleep(self->state->time_eat * 500);
+	}
+	while (1)
+	{
+		ft_eat(self);
+		ft_massage(self, "SLEEPING");
+		usleep(self->state->time_sleep * 1000);
+		ft_massage(self, "THINKING");
+	}
 }
 
-void	ft_writing(t_philo2 *p, char *msg)
+void	ft_massage(t_philo *philo, char *str)
 {
 	uint64_t	delta;
 	static int	dead = 0;
 
-	printf ("ft_writing\n");
 	if (dead > 0)
 		return ;
-	delta = get_time() - p->phil->time_start;
-	pthread_mutex_lock(&p->phil->write);
-	if (msg[0] == 'd' && msg[1] == 'i')
+	delta = ft_get_time() - philo->state->start;
+	pthread_mutex_lock(&philo->state->write);
+	if (str[0] == 'd' && str[1] == 'i')
 		dead = 1;
-	printf("%llu %d %s\n", delta, p->name + 1, msg);
-	pthread_mutex_unlock(&p->phil->write);
+	printf("%llu %d %s\n", delta, philo->name + 1, str);
+	pthread_mutex_unlock(&philo->state->write);
+}
+
+void	ft_eat(t_philo *self)
+{
+	pthread_mutex_lock(&self->state->forks[self->right_fork]);
+	ft_massage(self, "TAKEN");
+	pthread_mutex_lock(&self->state->forks[self->left_fork]);
+	ft_massage(self, "TAKEN");
+	pthread_mutex_lock(&self->eating_m);
+	self->last_eat = ft_get_time();
+	self->death_lim = self->last_eat + self->state->time_die;
+	ft_massage(self, "EATING");
+	usleep(self->state->time_eat * 1000);
+	self->eat_counter++;
+	pthread_mutex_unlock(&self->eating_m);
+	pthread_mutex_unlock(&self->state->forks[self->left_fork]);
+	pthread_mutex_unlock(&self->state->forks[self->right_fork]);
 }
