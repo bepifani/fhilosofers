@@ -6,7 +6,7 @@
 /*   By: bepifani <bepifani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 19:20:37 by bepifani          #+#    #+#             */
-/*   Updated: 2022/03/29 23:17:00 by bepifani         ###   ########.fr       */
+/*   Updated: 2022/04/12 22:14:39 by bepifani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ft_init2(t_philo2 *p)
 	{
 		p->philosof[i].name = i;
 		p->philosof[i].left_fork = i;
-		p->philosof[i].right_fork= i;
+		p->philosof[i].right_fork= i + 1;
 		p->philosof[i].eat_counter = i;
 		p->philosof[i].state = p;
 		pthread_mutex_init(&p->philosof[i].eating_m, NULL);
@@ -91,11 +91,11 @@ int	main(int argc, char **argv)
 	t_philo2	philo;
 
 	if (argc != 5 && argc != 6)
-		return (ft_error("wrond arguments"));
+		return (ft_error("[ERROR] Wrond arguments"));
 	if (ft_init(&philo, argv, argc))
-		return (ft_clear(&philo) && ft_error("wrond arguments"));
+		return (ft_clear(&philo) && ft_error("[ERROR] Wrond arguments"));
 	if (ft_philosof((&philo)))
-		return (ft_clear(&philo) && ft_error("wrond arguments"));
+		return (ft_clear(&philo) && ft_error("[ERROR] Wrond arguments"));
 	pthread_mutex_lock(&philo.death_occur);
 	pthread_mutex_unlock(&philo.death_occur);
 	ft_clear(&philo);

@@ -6,7 +6,7 @@
 /*   By: bepifani <bepifani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 19:44:34 by bepifani          #+#    #+#             */
-/*   Updated: 2022/03/29 23:13:11 by bepifani         ###   ########.fr       */
+/*   Updated: 2022/04/12 19:26:59 by bepifani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int		ft_strlen(char *str)
 int		ft_error(char *str)
 {
 	write (1, str, ft_strlen(str));
+	write (1, "\n", 1);
 	return (1);
 }
 

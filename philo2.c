@@ -6,7 +6,7 @@
 /*   By: bepifani <bepifani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 22:58:44 by bepifani          #+#    #+#             */
-/*   Updated: 2022/03/29 23:15:49 by bepifani         ###   ########.fr       */
+/*   Updated: 2022/04/12 22:18:07 by bepifani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	*ft_spec(void *p)
 		}
 		if (en == phil->nb_philo)
 			break ;
-		usleep(2500);
+		usleep(100);
 	}
 	pthread_mutex_unlock(&phil->death_occur);
 	return (NULL);
@@ -51,7 +51,7 @@ void	*ft_ob(void	*p)
 			pthread_mutex_unlock(&phil->state->death_occur);
 		}
 		pthread_mutex_unlock(&phil->eating_m);
-		usleep(1000);
+		usleep(100);
 	}
 }
 
@@ -68,8 +68,8 @@ void	*ft_philo(void *p)
 	if (self->name % 2 == 1 || (self->state->nb_philo % 2 == 1
 			&& self->name == self->state->nb_philo - 1))
 	{
-		ft_massage(self, "THINKING");
-		usleep(self->state->time_eat * 500);
+		//ft_massage(self, "THINKING");
+		usleep(1000000);
 	}
 	while (1)
 	{
@@ -89,7 +89,7 @@ void	ft_massage(t_philo *philo, char *str)
 		return ;
 	delta = ft_get_time() - philo->state->start;
 	pthread_mutex_lock(&philo->state->write);
-	if (str[0] == 'd' && str[1] == 'i')
+	if (str[0] == 'D' && str[1] == 'I')
 		dead = 1;
 	printf("%llu %d %s\n", delta, philo->name + 1, str);
 	pthread_mutex_unlock(&philo->state->write);
@@ -98,14 +98,17 @@ void	ft_massage(t_philo *philo, char *str)
 void	ft_eat(t_philo *self)
 {
 	pthread_mutex_lock(&self->state->forks[self->right_fork]);
-	ft_massage(self, "TAKEN");
+	ft_massage(self, "TAKEN  RIGHT FORK");
+	// printf ("tyt\n");
 	pthread_mutex_lock(&self->state->forks[self->left_fork]);
-	ft_massage(self, "TAKEN");
+	// printf ("tyt2\n");
+	ft_massage(self, "TAKEN LEFT FORK");
 	pthread_mutex_lock(&self->eating_m);
 	self->last_eat = ft_get_time();
 	self->death_lim = self->last_eat + self->state->time_die;
+	
 	ft_massage(self, "EATING");
-	usleep(self->state->time_eat * 1000);
+	usleep(self->state->time_eat * 100);
 	self->eat_counter++;
 	pthread_mutex_unlock(&self->eating_m);
 	pthread_mutex_unlock(&self->state->forks[self->left_fork]);
