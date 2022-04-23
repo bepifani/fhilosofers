@@ -6,7 +6,7 @@
 /*   By: bepifani <bepifani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 22:58:44 by bepifani          #+#    #+#             */
-/*   Updated: 2022/04/12 22:18:07 by bepifani         ###   ########.fr       */
+/*   Updated: 2022/04/18 19:51:29 by bepifani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	*ft_ob(void	*p)
 			pthread_mutex_unlock(&phil->state->death_occur);
 		}
 		pthread_mutex_unlock(&phil->eating_m);
-		usleep(100);
+		usleep(1000);
 	}
 }
 
@@ -68,8 +68,8 @@ void	*ft_philo(void *p)
 	if (self->name % 2 == 1 || (self->state->nb_philo % 2 == 1
 			&& self->name == self->state->nb_philo - 1))
 	{
-		//ft_massage(self, "THINKING");
-		usleep(1000000);
+		ft_massage(self, "THINKING");
+		usleep(400);
 	}
 	while (1)
 	{
@@ -99,16 +99,13 @@ void	ft_eat(t_philo *self)
 {
 	pthread_mutex_lock(&self->state->forks[self->right_fork]);
 	ft_massage(self, "TAKEN  RIGHT FORK");
-	// printf ("tyt\n");
 	pthread_mutex_lock(&self->state->forks[self->left_fork]);
-	// printf ("tyt2\n");
 	ft_massage(self, "TAKEN LEFT FORK");
 	pthread_mutex_lock(&self->eating_m);
 	self->last_eat = ft_get_time();
 	self->death_lim = self->last_eat + self->state->time_die;
-	
 	ft_massage(self, "EATING");
-	usleep(self->state->time_eat * 100);
+	usleep(self->state->time_eat * 1000);
 	self->eat_counter++;
 	pthread_mutex_unlock(&self->eating_m);
 	pthread_mutex_unlock(&self->state->forks[self->left_fork]);

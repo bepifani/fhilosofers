@@ -6,7 +6,7 @@
 /*   By: bepifani <bepifani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 19:20:37 by bepifani          #+#    #+#             */
-/*   Updated: 2022/04/12 22:14:39 by bepifani         ###   ########.fr       */
+/*   Updated: 2022/04/18 19:54:07 by bepifani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ft_init2(t_philo2 *p)
 	{
 		p->philosof[i].name = i;
 		p->philosof[i].left_fork = i;
-		p->philosof[i].right_fork= i + 1;
+		p->philosof[i].right_fork = i + 1;
 		p->philosof[i].eat_counter = i;
 		p->philosof[i].state = p;
 		pthread_mutex_init(&p->philosof[i].eating_m, NULL);
@@ -52,7 +52,7 @@ int	ft_init(t_philo2 *p, char **argv, int argc)
 	p->nb_philo = ft_atoi(argv[1]);
 	p->time_die = ft_atoi(argv[2]);
 	p->time_eat = ft_atoi(argv[3]);
-	p->time_die = ft_atoi(argv[4]);
+	p->time_sleep = ft_atoi(argv[4]);
 	p->must_eat = 0;
 	if (argc == 6)
 		p->must_eat = ft_atoi(argv[5]);

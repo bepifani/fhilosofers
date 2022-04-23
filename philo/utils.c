@@ -6,7 +6,7 @@
 /*   By: bepifani <bepifani@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 19:44:34 by bepifani          #+#    #+#             */
-/*   Updated: 2022/04/12 19:26:59 by bepifani         ###   ########.fr       */
+/*   Updated: 2022/04/18 19:54:37 by bepifani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,17 @@ int	ft_clear(t_philo2 *p)
 	return (1);
 }
 
-int		ft_strlen(char *str)
+int	ft_strlen(char *str)
 {
-	int i;
-	
+	int	i;
+
 	i = 0;
 	while (str[i] != '\0')
 		i++;
 	return (i);
 }
 
-int		ft_error(char *str)
+int	ft_error(char *str)
 {
 	write (1, str, ft_strlen(str));
 	write (1, "\n", 1);

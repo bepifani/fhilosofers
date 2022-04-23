@@ -5,20 +5,20 @@
 #                                                     +:+ +:+         +:+      #
 #    By: bepifani <bepifani@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/03/29 19:19:51 by bepifani          #+#    #+#              #
-#    Updated: 2022/03/29 23:10:26 by bepifani         ###   ########.fr        #
+#    Created: 2022/04/21 20:52:48 by bepifani          #+#    #+#              #
+#    Updated: 2022/04/23 21:08:20 by bepifani         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = philo
+NAME = philo_bonus
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra -c
 
-SRC_FILES = philo.c	utils.c philo2.c
+SRC_FILES = philo_bonus.c	utils_bonus.c	init_bonus.c	utils2_bonus.c	action_bonus.c
 
 OBJECTS = $(SRC_FILES:.c=.o)
 
-HEADER = philo.h
+HEADER = philo_bonus.h
 
 
 OBJ = $(OBJECTS)
@@ -41,4 +41,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re
